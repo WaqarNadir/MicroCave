@@ -30,6 +30,8 @@
         android:id="@+id/reload"
         android:layout_width="70dp"
         android:layout_height="20dp"
+        android:onClick="reload"
+
         android:layout_alignBottom="@+id/masjidlist"
         android:layout_alignRight="@+id/masjidlist"
         android:layout_alignTop="@+id/masjidlist"
@@ -59,6 +61,7 @@
 
     <ImageView
         android:id="@+id/all"
+        android:onClick="All"
         android:layout_width="65dp"
         android:layout_height="35dp"
         android:layout_alignLeft="@+id/reload"

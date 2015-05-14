@@ -118,7 +118,7 @@ public class Select_Masjid extends ActionBarActivity {
                 }
 
                 adapter = new ArrayAdapter<String>(Select_Masjid.this,
-                        android.R.layout.simple_list_item_1, android.R.id.text1,SearchedDataResult);//new String[]{al.get(i)}
+                        android.R.layout.simple_list_item_1, android.R.id.text1,SearchedDataResult);
                 MasjidList.setAdapter(adapter);
 
             }
@@ -152,9 +152,12 @@ public class Select_Masjid extends ActionBarActivity {
                     Masjid.add(i,obj.getString("masjid_name"));
                     Local_Area.add(i,obj.getString("masjid_local_area"));
                     Larger_area.add(i,obj.getString("masjid_larger_area"));
+
                     al.add(i,Masjid.get(i)+"\n"+
                             Local_Area.get(i) +"\n"+
-                            Larger_area.get(i) +" "+obj.getString("masjid_country"));
+                            Larger_area.get(i) +" "+
+                            obj.getString("masjid_country"));
+
 //                    al.add(obj.getString("masjid_name")+"\n"+obj.getString("masjid_local_area")
 //                            +"\n"+obj.getString("masjid_larger_area")+","+obj.getString("masjid_country"));
                 }
@@ -162,13 +165,7 @@ public class Select_Masjid extends ActionBarActivity {
                 Collections.sort(Local_Area);
                 Collections.sort(Larger_area);
                 Collections.sort(al);
-
-                 adapter = new ArrayAdapter<String>(Select_Masjid.this,
-                        android.R.layout.simple_list_item_1, android.R.id.text1, al);
-
-
-                // Assign adapter to ListView
-                MasjidList.setAdapter(adapter);
+                all();                  //set value to adapter
 
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
@@ -199,5 +196,24 @@ public class Select_Masjid extends ActionBarActivity {
                     return 0;
     }
 //-----------------------------------------------------------------------------
+
+
+public void All(View v)
+{
+ all();
+}
+    public void reload(View v)
+    {
+        new HttpAsyncTask().execute("http://www.masjid-timetable.com/data/masjids.php");
+    }
+public void all()
+{
+    adapter = new ArrayAdapter<String>(Select_Masjid.this,
+            android.R.layout.simple_list_item_1, android.R.id.text1, al);
+
+
+    // Assign adapter to ListView
+    MasjidList.setAdapter(adapter);
 }
 
+}
