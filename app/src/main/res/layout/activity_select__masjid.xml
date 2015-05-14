@@ -31,7 +31,6 @@
         android:layout_width="70dp"
         android:layout_height="20dp"
         android:onClick="reload"
-
         android:layout_alignBottom="@+id/masjidlist"
         android:layout_alignRight="@+id/masjidlist"
         android:layout_alignTop="@+id/masjidlist"
@@ -46,18 +45,28 @@
         android:layout_alignLeft="@+id/masjidlist"
         android:layout_alignTop="@+id/masjidlist"
         android:paddingLeft="5dp"
+        android:onClick="dashboard"
         android:src="@drawable/dashboard" />
 
     <EditText
         android:id="@+id/search"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_below="@+id/masjidlist"
         android:layout_toLeftOf="@+id/reload"
         android:hint="Search"
         android:paddingLeft="10dp"
+        android:background="@drawable/search_bg"
+        android:inputType="text"/>
 
-        android:background="@drawable/search_bg" />
+    <ImageView
+        android:id="@+id/timetable"
+        android:onClick="timetable"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:paddingLeft="5dp"
+        android:layout_below="@+id/s_search"
+        android:src="@drawable/timetable_btn" />
 
     <ImageView
         android:id="@+id/all"
@@ -106,16 +115,20 @@
         android:id="@+id/masjid_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search"
-        android:layout_alignTop="@+id/alphabets"
+        android:layout_below="@+id/timetable"
+        android:layout_toLeftOf="@+id/alphabets"
+        android:paddingRight="10dp"
         >
 
     </ListView>
-    <LinearLayout android:orientation="vertical"
-        android:layout_below="@id/all"
-        android:layout_width="wrap_content" android:layout_height="500dp"
+    <LinearLayout
+        android:id="@+id/alphabets"
+        android:orientation="vertical"
+        android:layout_below="@id/timetable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-
+        android:paddingLeft="10dp"
         android:background="@android:color/transparent" >
 
         <TextView android:id="@+id/A" android:text="A" android:tag="A"
