@@ -1,0 +1,111 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
+    tools:context="com.example.testproject.MainActivity" >
+
+    <!--  <ListView
+          android:id="@+id/masjid_list"
+          android:layout_height="wrap_content"
+          android:layout_width="match_parent"
+          android:layout_alignTop="@+id/lvbc">
+      </ListView>-->
+
+    <ImageView
+        android:id="@+id/masjidlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/masjid_list"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/select_masjid" />
+
+    <ImageView
+        android:id="@+id/reload"
+        android:layout_width="70dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@+id/masjidlist"
+        android:layout_alignRight="@+id/masjidlist"
+        android:layout_alignTop="@+id/masjidlist"
+        android:paddingRight="5dp"
+        android:src="@drawable/reload"
+         />
+    <ImageView
+        android:id="@+id/dash"
+        android:layout_width="70dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@+id/masjidlist"
+        android:layout_alignLeft="@+id/masjidlist"
+        android:layout_alignTop="@+id/masjidlist"
+        android:paddingLeft="5dp"
+        android:src="@drawable/dashboard" />
+
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/masjidlist"
+        android:layout_toLeftOf="@+id/reload"
+        android:hint="Search"
+        android:paddingLeft="10dp"
+
+        android:background="@drawable/search_bg" />
+
+    <ImageView
+        android:id="@+id/all"
+        android:layout_width="65dp"
+        android:layout_height="35dp"
+        android:layout_alignLeft="@+id/reload"
+        android:layout_alignTop="@+id/search"
+        android:paddingLeft="5dp"
+        android:src="@drawable/button_all" />
+
+    <ImageView
+        android:id="@+id/s_search"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignBottom="@+id/all"
+        android:layout_alignRight="@+id/search"
+        android:layout_below="@+id/masjidlist"
+        android:paddingRight="10dp"
+        android:src="@drawable/search_icon" />
+
+    <ImageView
+        android:id="@+id/alphabets"
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"
+        android:layout_marginTop="53dp"
+        android:paddingLeft="15dp"
+        android:src="@drawable/text_abc"
+        android:layout_below="@+id/search"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <!-- <ImageView
+         android:id="@+id/lvbc"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="10dp"
+         android:layout_alignBottom="@+id/alphabets"
+         android:layout_alignRight="@+id/all"
+         android:layout_alignTop="@+id/search"
+         android:paddingRight="10dp"
+         android:src="@drawable/box_bg" />
+     -->
+
+    <ListView
+        android:id="@+id/masjid_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/alphabets"
+        android:layout_marginRight="20dp" >
+
+    </ListView>
+
+
+
+</RelativeLayout>
