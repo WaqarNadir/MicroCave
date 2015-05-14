@@ -1,6 +1,12 @@
 package com.microcave.masjidtimetable;
 
+import com.microcave.masjidtimetable.util.classes.ConnectionDetector;
+import com.microcave.masjidtimetable.util.classes.CustomListView;
+import com.microcave.masjidtimetable.util.classes.CustomListViewAdapter;
+
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -33,103 +39,105 @@ public class Select_Masjid extends ActionBarActivity {
     ArrayList<String> SearchedDataResult;
     ArrayAdapter<String> adapter;
     String temp;
+    ProgressDialog loader;
+    ConnectionDetector cd;
+    EditText searchbox;
+    private ArrayList<CustomListView> listViewItems;
+    private CustomListViewAdapter ListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select__masjid);
 
+        // initialization
         al=new ArrayList<String>();
         Masjid=new ArrayList<String>();
         Local_Area=new ArrayList<String>();
         Larger_area=new ArrayList<String>();
         SearchedDataResult= new ArrayList<String>();
+        loader = new ProgressDialog(Select_Masjid.this);
+        cd = new ConnectionDetector(this);
         MasjidList=(ListView) findViewById(R.id.masjid_list);
-        final EditText searchbox= (EditText)findViewById(R.id.search);
-        // -------------------------get data from web service --------------------
-        new HttpAsyncTask().execute("http://www.masjid-timetable.com/data/masjids.php");
+        searchbox= (EditText)findViewById(R.id.search);
+
+        if(cd.isConnectingToInternet()) {
+            // start loader
+            showLoader();
+            // -------------------------get data from web service --------------------
+            new HttpAsyncTask().execute("http://www.masjid-timetable.com/data/masjids.php");
+        }
+        else {Toast.makeText(this,"You don`t have any network access now.",Toast.LENGTH_LONG).show();}
+
         //-------------------------------------------------------------------------
 // ----------------Search function calling on text changed-----------------------
 
-         final TextWatcher    myhandler = new TextWatcher() {
+        final TextWatcher myhandler = new TextWatcher() {
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                SearchedDataResult.clear();         // deletes the previous data of searched
-               String value=searchbox.getText().toString();
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    SearchedDataResult.clear();         // deletes the previous data of searched
+                    String value = searchbox.getText().toString();
 
-                for(int i=0; i<Masjid.size();i++)
-                {
-                    temp=Masjid.get(i).toString();              // to check ignorecase sensitivity
-                    if( temp.toLowerCase().contains(value.toLowerCase())  )
-                    {
-                        //first select the desired Masjid
-                        for(int val =0; val<al.size();val++ )
-                        {           //Now check that specific mosque in all list
-                            if(al.get(val).contains(Masjid.get(i)))         // check masjid in al list
-                            {
-                                SearchedDataResult.add(al.get(val) );
+                    for (int i = 0; i < Masjid.size(); i++) {
+                        temp = Masjid.get(i).toString();              // to check ignorecase sensitivity
+                        if (temp.toLowerCase().contains(value.toLowerCase())) {
+                            //first select the desired Masjid
+                            for (int val = 0; val < al.size(); val++) {           //Now check that specific mosque in all list
+                                if (al.get(val).contains(Masjid.get(i)))         // check masjid in al list
+                                {
+                                    SearchedDataResult.add(al.get(val));
+                                }
+                            }
+
+                        }
+                    }
+                    String[] _localarea;
+                    for (int j = 0; j < Local_Area.size(); j++) {
+                        _localarea = Local_Area.get(j).split(" ");        // spliting on space for searching complete Name
+                        for (int inner = 0; inner < _localarea.length; inner++) {
+                            //search specific area
+                            temp = _localarea[inner].toLowerCase();                  // ignore Case Senstivity
+                            if (temp.startsWith(value.toLowerCase())) {
+                                for (int val = 0; val < al.size(); val++) {       //Now check that area in All lsit
+                                    if (al.get(val).contains(Local_Area.get(j)))         // check Local area in al list
+                                    {
+                                        SearchedDataResult.add(al.get(val));
+                                    }
+                                }
+
                             }
                         }
 
                     }
-                }
-                String[] _localarea;
-                for (int j=0; j< Local_Area.size();j++)
-                {
-                           _localarea= Local_Area.get(j).split(" ");        // spliting on space for searching complete Name
-                    for(int inner=0; inner< _localarea.length;inner++)
-                    {
-                       //search specific area
-                        temp= _localarea[inner].toLowerCase();                  // ignore Case Senstivity
-                        if(temp.startsWith(value.toLowerCase()))
-                        {
-                            for(int val =0; val<al.size();val++ )
-                            {       //Now check that area in All lsit
-                                if(al.get(val).contains(Local_Area.get(j)))         // check Local area in al list
-                                {
-                                    SearchedDataResult.add(al.get(val) );
+
+                    for (int i = 0; i < Larger_area.size(); i++) {
+                        temp = Larger_area.get(i).toString();              // to check ignorecase sensitivity
+                        if (temp.toLowerCase().startsWith(value.toLowerCase())) {       //Larger area identified
+                            for (int val = 0; val < al.size(); val++) {
+                                if (al.get(val).contains(Larger_area.get(i)))         // check Larger area in al list
+                                {// searched area in al list
+                                    SearchedDataResult.add(al.get(val));
                                 }
                             }
 
                         }
                     }
 
+                    adapter = new ArrayAdapter<String>(Select_Masjid.this,
+                            android.R.layout.simple_list_item_1, android.R.id.text1, SearchedDataResult);
+                    MasjidList.setAdapter(adapter);
+
                 }
 
-                for(int i=0; i<Larger_area.size();i++)
-                {
-                    temp=Larger_area.get(i).toString();              // to check ignorecase sensitivity
-                    if( temp.toLowerCase().startsWith(value.toLowerCase())  )
-                    {       //Larger area identified
-                        for(int val =0; val<al.size();val++ )
-                        {
-                            if(al.get(val).contains(Larger_area.get(i)))         // check Larger area in al list
-                            {// searched area in al list
-                                SearchedDataResult.add(al.get(val) );
-                            }
-                        }
+                public void afterTextChanged(Editable s) {
 
-                    }
                 }
-
-                adapter = new ArrayAdapter<String>(Select_Masjid.this,
-                        android.R.layout.simple_list_item_1, android.R.id.text1,SearchedDataResult);
-                MasjidList.setAdapter(adapter);
-
-            }
-
-            public void afterTextChanged(Editable s)
-            {
-
-            }
-        };
+            };
 //-------------------------------------------------------------------------
-        searchbox.addTextChangedListener(myhandler);
+            searchbox.addTextChangedListener(myhandler);
 
 
     }
@@ -165,6 +173,9 @@ public class Select_Masjid extends ActionBarActivity {
                 Collections.sort(Local_Area);
                 Collections.sort(Larger_area);
                 Collections.sort(al);
+
+                // dismiss loader
+                loader.dismiss();
                 all();                  //set value to adapter
 
             } catch (JSONException e) {
@@ -198,22 +209,46 @@ public class Select_Masjid extends ActionBarActivity {
 //-----------------------------------------------------------------------------
 
 
-public void All(View v)
+    public void All(View v)
 {
  all();
 }
     public void reload(View v)
     {
-        new HttpAsyncTask().execute("http://www.masjid-timetable.com/data/masjids.php");
+        if(cd.isConnectingToInternet()) {
+
+            al.clear();
+            adapter.clear();
+            adapter.notifyDataSetChanged();
+            // start loader
+            showLoader();
+            // -------------------------get data from web service --------------------
+            new HttpAsyncTask().execute("http://www.masjid-timetable.com/data/masjids.php");
+            searchbox.setText("");
+        }
+        else {Toast.makeText(this,"You don`t have any network access now.",Toast.LENGTH_LONG).show();}
     }
-public void all()
-{
-    adapter = new ArrayAdapter<String>(Select_Masjid.this,
-            android.R.layout.simple_list_item_1, android.R.id.text1, al);
+    public void dashboard(View v){
+        Intent i= new Intent(this,DashBoard.class);
+        startActivity(i);
+    }
+    public void all()
+    {
+        adapter = new ArrayAdapter<String>(Select_Masjid.this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, al);
 
 
-    // Assign adapter to ListView
-    MasjidList.setAdapter(adapter);
-}
+        // Assign adapter to ListView
+        MasjidList.setAdapter(adapter);
+        searchbox.setText("");
+    }
+
+    public void showLoader(){
+        // starting loader
+        loader.setMessage("Fetching data, Please wait...");
+        loader.setIndeterminate(true);
+        loader.setCancelable(false);
+        loader.show();
+    }
 
 }
